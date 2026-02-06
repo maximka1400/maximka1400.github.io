@@ -162,7 +162,7 @@
         .letter {
             background: #fff9fb;
             border-radius: 20px;
-            padding: 60px 40px;
+            padding: 40px;
             margin: 20px 0;
             border: 2px solid #ffccd5;
             position: relative;
@@ -180,6 +180,17 @@
             border-radius: 20px 20px 0 0;
         }
 
+        .letter-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 30px;
+            border: 5px solid #ff416c;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: block;
+        }
+
         .letter-text {
             font-size: 1.3em;
             color: #d42055;
@@ -187,7 +198,6 @@
             line-height: 1.6;
             text-align: center;
             margin-bottom: 30px;
-            /* Убрали анимацию пульсации */
         }
 
         .signature {
@@ -195,6 +205,44 @@
             font-size: 1.5em;
             color: #8a1c3d;
             font-style: italic;
+        }
+
+        /* Стиль аудио плеера */
+        .audio-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .audio-btn {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transition: transform 0.3s;
+        }
+
+        .audio-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .audio-btn.playing {
+            animation: pulse 2s infinite;
         }
 
         @media (max-width: 768px) {
@@ -223,6 +271,10 @@
             .signature {
                 font-size: 1.2em;
             }
+            .letter-photo {
+                width: 150px;
+                height: 150px;
+            }
         }
     </style>
 </head>
@@ -235,6 +287,18 @@
     <div class="bg-heart" style="font-size: 110px; left: 15%; top: 65%; animation-delay: 3s;">❤️</div>
     <div class="bg-heart" style="font-size: 130px; left: 75%; top: 75%; animation-delay: 5s;">❤️</div>
     <div class="bg-heart" style="font-size: 70px; left: 40%; top: 85%; animation-delay: 2s;">❤️</div>
+
+    <!-- Аудио плеер -->
+    <div class="audio-container" id="audioContainer">
+        <button class="audio-btn" id="audioBtn">▶️</button>
+        <span id="audioStatus">Music off</span>
+    </div>
+
+    <!-- Аудио элемент (скрытый) -->
+    <audio id="backgroundMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
     <div class="container" id="mainContainer">
         <div class="envelope"></div>
@@ -250,6 +314,9 @@
 
     <div class="container" id="letterContainer" style="display: none;">
         <div class="letter">
+            <!-- Фото -->
+            <img src="https://i.imgur.com/6QbX6yA.jpg" alt="A special photo" class="letter-photo" id="letterPhoto">
+            
             <div class="letter-text">
                 So if you ask me why<br>
                 She wouldn't say goodbye<br>
@@ -279,6 +346,9 @@
         const noBtn = document.getElementById('noBtn');
         const mainContainer = document.getElementById('mainContainer');
         const letterContainer = document.getElementById('letterContainer');
+        const audioBtn = document.getElementById('audioBtn');
+        const audioStatus = document.getElementById('audioStatus');
+        const backgroundMusic = document.getElementById('backgroundMusic');
         
         // Счётчик нажатий на No
         let noCount = 0;
@@ -352,7 +422,28 @@
                     letterContainer.style.transform = 'scale(1)';
                 }, 50);
             }, 300);
- });
+        });
+        
+        // Обработчик кнопки аудио
+        audioBtn.addEventListener('click', function() {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play()
+                    .then(() => {
+                        audioBtn.textContent = '⏸️';
+                        audioBtn.classList.add('playing');
+                        audioStatus.textContent = 'Music on';
+                    })
+                    .catch(error => {
+                        console.error('Error playing audio:', error);
+                        alert('Please click anywhere on the page first to enable audio playback.');
+                    });
+            } else {
+                backgroundMusic.pause();
+                audioBtn.textContent = '▶️';
+                audioBtn.classList.remove('playing');
+                audioStatus.textContent = 'Music off';
+            }
+        });
         
         // Анимация дрожания
         const style = document.createElement('style');
