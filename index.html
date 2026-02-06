@@ -60,7 +60,7 @@
             background: linear-gradient(135deg, #ff416c, #ff4b2b);
             margin: 0 auto 30px;
             position: relative;
-            border-radius 8px;
+            border-radius: 8px;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
 
@@ -249,7 +249,7 @@
 
     <div class="container" id="mainContainer">
         <div class="envelope"></div>
-        <h1>💌 A Special Letter for You</h1>
+        <h1>A Special Letter for You</h1>
         
         <div class="question">will you be my Valentine?</div>
         
@@ -363,7 +363,7 @@
                     letterContainer.style.opacity = '1';
                     letterContainer.style.transform = 'scale(1)';
                 }, 50);
-            300);
+            }, 300); // <-- ИСПРАВЛЕНО: добавлена запятая перед 300
         });
         
         // Анимация дрожания
