@@ -456,6 +456,13 @@
             }
         `;
         document.head.appendChild(style);
+        // Разрешает воспроизведение при первом клике по странице
+document.body.addEventListener('click', function() {
+    const audio = document.getElementById('backgroundMusic');
+    audio.play().catch(e => {
+        console.log("Разрешение на воспроизведение получено");
+    });
+}, { once: true });
     </script>
 </body>
 </html>
